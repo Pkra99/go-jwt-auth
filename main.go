@@ -6,6 +6,7 @@ import (
 
 	"github.com/Pkra99/go-jwt-auth/controllers"
 	"github.com/Pkra99/go-jwt-auth/initializers"
+	"github.com/Pkra99/go-jwt-auth/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,10 +30,11 @@ func main() {
 
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
+	r.GET("/validate", middlewares.AuthMiddleware, controllers.Validate)
 
 
   
   // Start server on port 8080 (default)
   // Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
-  r.Run()
+  	r.Run()
 }
