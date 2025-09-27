@@ -109,6 +109,28 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+func Logout(c *gin.Context) {
+	c.SetCookie("Authorization", "", -1, "`", "", false, true)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logged out successfully",
+	})
+}
+
+func GenerateAccessToken(userID uint, email string) (string, error){
+	claims := jwt.MapClaims{
+		"sub": userID,
+		"emial": email,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"iat": time.Now().Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	secret := os.Getenv("SECRET")
+	return token.SignedString([]byte(secret))
+}
+
 func Validate (c *gin.Context) {
 
 	u, _ := c.Get("user")
